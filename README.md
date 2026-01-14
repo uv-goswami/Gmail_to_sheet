@@ -229,9 +229,6 @@ python3 src/main.py
 
 <br>
 
-# Video Explanation:
-<video controls src="Video/Yuvraj_Singh_assignment.mp4" title="Title"></video>
-
 
 ## 📜 License
 
