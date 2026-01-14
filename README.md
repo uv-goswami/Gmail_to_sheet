@@ -148,12 +148,12 @@ I chose a simple JSON file - state.json to store the ID of processed emails rath
 
 ## Challenges
 
-1. **OAuth Token Expiration**
+1. **OAuth Token Expiration**: 
 OAuth token expires every 1 hour. Running script after expiration causes authentication failure. Then I have to reauthenticate.
 
    **Solution**: I implemented automatic token refresh logic using `google.auth.transport.requests.Request` object to check for token expiration. If expired the script automatically uses refresh_token to request new Access Token from Google without requiring manual browser login from me.
 
-2. **Secure Configuration**
+2. **Secure Configuration**: 
 Hardcoding sensitive data like SPREADSHEET_ID or file  paths into code is a major security risk and makes the code hard to deploy.
 
    **Solution**: I adopted the 12 Factor App principle for configuration
@@ -162,7 +162,7 @@ Hardcoding sensitive data like SPREADSHEET_ID or file  paths into code is a majo
       * I added .env and credentials.json to .gitignore
       * I used os.path.join(Base_DIR, .....) to ensure the path works on any machine.
 
-3. **Rate Limiting**
+3. **Rate Limiting**: 
 Google Cloud API has a quota for API. Fetching every single email in a large inbox one by one would hit limits quickly, causing the script with `429 Too Many Requests`.
 
    **Solution**: I implemented three stretigies:
@@ -170,7 +170,7 @@ Google Cloud API has a quota for API. Fetching every single email in a large inb
       * I implemented *State based filtering* by checking `state.json` before calling `get_email_details()` the script avoids redudant API calls.
       * The loop processes emails individually and saves the state immediately. If we hit rate limit(or loose network), the next run starts exactly where it left without refetching already finished emails. 
 
-4. **Email with HTML**
+4. **Email with HTML**: 
 Emails are often multipart (Text + HTML). Initially the parser would fail on emails that were HTML. 
 
    **Solution**: I implemented a recursive parsing strategy using `BeautifulSoup`.
